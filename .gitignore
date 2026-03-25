@@ -1,1 +1,8 @@
 hf_cache/
+openpi_cache/
+openpi-cache/
+.apptainer_cache/
+hf_cache/
+*.ckpt
+*.pth
+*.pt
