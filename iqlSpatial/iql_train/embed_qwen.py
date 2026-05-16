@@ -36,8 +36,16 @@ def load_model(model_name, device, cache_dir):
             model_name, cache_dir=cache_dir,
             torch_dtype=torch.bfloat16, trust_remote_code=True,
         ).to(device).eval()
-        hdim = model.config.hidden_size
+        # FIX: Safely extract hidden_size based on HF config structure
+        if hasattr(model.config, "text_config"):
+            hdim = model.config.text_config.hidden_size
+        else:
+            hdim = getattr(model.config, "hidden_size", 2048)
+            
         print(f"  VL model loaded, hidden_dim={hdim}")
+
+#        hdim = model.config.hidden_size
+ #       print(f"  VL model loaded, hidden_dim={hdim}")
         return model, processor, hdim, "vl"
     except Exception as e:
         print(f"  VL failed ({e}), trying text-only...")
